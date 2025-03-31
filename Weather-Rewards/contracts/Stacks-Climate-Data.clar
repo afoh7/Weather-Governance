@@ -137,7 +137,7 @@
                 (map-set device-performance-metrics
                     {device-id: device-id}
                     {
-                        last-active-block: stacks-block-height,
+                        last-active-block: block-height,
                         successful-validations: u0,
                         total-earned-rewards: u0,
                         total-incurred-penalties: u0
@@ -196,7 +196,7 @@
                     })
                 (map-set device-performance-metrics
                     {device-id: device-id}
-                    (merge device-metrics {last-active-block: stacks-block-height}))
+                    (merge device-metrics {last-active-block: block-height}))
                 (map-set registered-devices
                     {device-id: device-id}
                     (merge device-data 
@@ -280,7 +280,7 @@
                           ERR-DEVICE-NOT-REGISTERED))
           (device-metrics (unwrap! (map-get? device-performance-metrics {device-id: device-id})
                                  ERR-DEVICE-NOT-REGISTERED)))
-        (if (> (- stacks-block-height (get last-active-block device-metrics)) 
+        (if (> (- block-height (get last-active-block device-metrics)) 
                device-inactivity-limit)
             (begin
                 (map-set registered-devices
@@ -315,7 +315,7 @@
                         supporting-votes: u0,
                         opposing-votes: u0,
                         proposal-status: "active",
-                        voting-deadline: (+ stacks-block-height u1440)
+                        voting-deadline: (+ block-height u1440)
                     })
                 (var-set governance-proposal-counter new-proposal-id)
                 (ok new-proposal-id))
@@ -331,7 +331,7 @@
                           ERR-UNAUTHORIZED-ACCESS)))
         (if (and
             (is-eq (get proposal-status proposal-data) "active")
-            (< stacks-block-height (get voting-deadline proposal-data))
+            (< block-height (get voting-deadline proposal-data))
             (is-none (map-get? voter-participation 
                               {proposal-id: proposal-id, voter-address: tx-sender})))
             (begin
